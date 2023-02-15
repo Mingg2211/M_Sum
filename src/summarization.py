@@ -21,31 +21,37 @@ class M_Sum():
         self.pretrained = pretrained
         self.tokenizer = BertTokenizer.from_pretrained(self.pretrained)
         self.bert_model = BertModel.from_pretrained(self.pretrained)
+        
     def get_data_url(self, dantri_url):
-        json_folder = "news_data/crawlNews/json_data/"
-        cut = dantri_url.split("/")
-        file_name = cut[-1].replace(".htm", '').replace("-", "_")
-        file_name = str(file_name) + ".json"
-        json_storage = os.path.join(json_folder,file_name)
-        if not (os.path.exists(json_storage)):
-            news_ = crawl_News(dantri_url)
-            # print(news_)
-            # list_of_files = glob.glob('./news_data/crawlNews/json_data/*.json') # * means all if need specific format then *.csv
-            # # print(list_of_files)
-            # latest_json_file = max(list_of_files, key=os.path.getctime)
-            with open(json_storage,'r', encoding='utf-8') as f:
-                news_data = json.load(f)
-            title = news_data['content'][0]['title']
-            description = news_data['content'][0]['description'].replace('(Dân trí) - ','')
-            paras = news_data['content'][0]['paras']
-            return title, description,paras
-        else:
-            with open(json_storage,'r', encoding='utf-8') as f:
-                news_data = json.load(f)
-            title = news_data['content'][0]['title']
-            description = news_data['content'][0]['description'].replace('(Dân trí) - ','')
-            paras = news_data['content'][0]['paras']
-            return title, description,paras
+        # json_folder = "news_data/crawlNews/json_data/"
+        # cut = dantri_url.split("/")
+        # file_name = cut[-1].replace(".htm", '').replace("-", "_")
+        # file_name = str(file_name) + ".json"
+        # json_storage = os.path.join(json_folder,file_name)
+        # print(json_storage)
+        # if not (os.path.exists(json_storage)):
+        #     news_ = crawl_News(dantri_url)
+        #     # print(news_)
+        #     # list_of_files = glob.glob('./news_data/crawlNews/json_data/*.json') # * means all if need specific format then *.csv
+        #     # # print(list_of_files)
+        #     # latest_json_file = max(list_of_files, key=os.path.getctime)
+        #     with open(json_storage,'r', encoding='utf-8') as f:
+        #         news_data = json.load(f)
+        #     title = news_data['content'][0]['title']
+        #     description = news_data['content'][0]['description'].replace('(Dân trí) - ','')
+        #     paras = news_data['content'][0]['paras']
+        #     # os.remove(json_storage)
+        #     return title, description,paras
+        # else:
+        #     with open(json_storage,'r', encoding='utf-8') as f:
+        #         news_data = json.load(f)
+        #     title = news_data['content'][0]['title']
+        #     description = news_data['content'][0]['description'].replace('(Dân trí) - ','')
+        #     paras = news_data['content'][0]['paras']
+        #     # os.remove(json_storage)
+        #     return title, description,paras
+        title, description,paras = crawl_News(url=dantri_url)
+        return title, description, paras
             
     def vector_calculator_url(self, dantri_url):
         title, description, paras = self.get_data_url(dantri_url)
@@ -144,8 +150,10 @@ class M_Sum():
         mingg = '\n\n'.join(result)
         return mingg
 
-        
-sum = M_Sum()  
-print(sum.summary_doc("""Ly tao (chữ Hán: 離騷) là một bài thơ nổi tiếng trong lịch sử Trung Quốc thuộc thể loại phú do chính trị gia, thi nhân nước Sở là Khuất Nguyên sáng tác vào thế kỷ 3 TCN, thời Chiến Quốc. Là thiên "trường ca" đầu tiên trong lịch sử văn học Trung Quốc, với tổng cộng 2.477 chữ, chia thành 373 câu, "Ly tao" được đánh giá là bài thơ nổi tiếng và xuất sắc nhất trong tuyển tập thi ca Sở từ. Sự đặc sắc của bài thơ trường thiên này là lời bi thảm triền miên, thường dùng lối tượng trưng, lối nhân cách hóa và dẫn rất nhiều điển cố thần thoại Trung Hoa."""))
+    
+# if __name__ == '__main__':    
+#     sum = M_Sum()  
   
-print(sum.summary_url('https://dantri.com.vn/the-gioi/quan-doi-my-phat-hien-linh-kien-dien-tu-dac-biet-trong-khi-cau-trung-quoc-20230214095227105.htm'))   
+#     print(sum.get_data_url('https://dantri.com.vn/the-gioi/quan-doi-my-phat-hien-linh-kien-dien-tu-dac-biet-trong-khi-cau-trung-quoc-20230214095227105.htm'))
+#     print('-------------------------------')
+#     print(sum.get_data_url('https://dantri.com.vn/kinh-doanh/bo-sung-326-trang-tai-lieu-flc-van-no-co-dong-mot-thong-tin-quan-trong-20220508143837505.htm'))   
