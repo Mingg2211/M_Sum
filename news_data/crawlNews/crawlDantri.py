@@ -42,7 +42,10 @@ def crawl_News(url):
         paras = []
         for p in p_tags:
             para = p.text
-            paras.append(para)
+            if not ('.' == para[-1] and 'Ảnh' in para):
+                paras.append(para)
+            else:
+                continue
         # print(paras)
 
         # Store the data in a Data object

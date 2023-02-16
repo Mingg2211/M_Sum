@@ -55,6 +55,7 @@ class M_Sum():
             
     def vector_calculator_url(self, dantri_url):
         title, description, paras = self.get_data_url(dantri_url)
+        print(title, description, paras)
         title_tok = word_tokenize(title, format="text")
         description_tok = word_tokenize(description, format='text')
         paras_tok = [word_tokenize(para, format='text') for para in paras]
@@ -95,7 +96,7 @@ class M_Sum():
         paras = self.get_data_url(dantri_url)[2]
         # print(len(paras))
         # print(paras)
-        if auto_selection == True :
+        if auto_selection == False :
             k = 5
         else :
             k = round(len(paras)/ 2 + 1)
