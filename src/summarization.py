@@ -15,12 +15,10 @@ from underthesea import sent_tokenize
 
 
 class M_Sum():
-    def __init__(self):
-        
-        pretrained = "NlpHUST/vibert4news-base-cased"
+    def __init__(self, pretrained = "NlpHUST/vibert4news-base-cased"):
         self.pretrained = pretrained
-        self.tokenizer = BertTokenizer.from_pretrained(self.pretrained)
-        self.bert_model = BertModel.from_pretrained(self.pretrained)
+        self.tokenizer = BertTokenizer.from_pretrained(self.pretrained, use_fast=False)
+        self.bert_model = AutoModel.from_pretrained(self.pretrained)
         
     def get_data_url(self, dantri_url):
         # json_folder = "news_data/crawlNews/json_data/"
@@ -55,19 +53,15 @@ class M_Sum():
             
     def vector_calculator_url(self, dantri_url):
         title, description, paras = self.get_data_url(dantri_url)
-        print(title, description, paras)
-        title_tok = word_tokenize(title, format="text")
-        description_tok = word_tokenize(description, format='text')
-        paras_tok = [word_tokenize(para, format='text') for para in paras]
         
         # return title_tok, description_tok, paras_tok, len(paras_tok)
         # centroid vector
-        input_id_title = self.tokenizer.encode(title_tok,add_special_tokens = True)
+        input_id_title = self.tokenizer.encode(title,add_special_tokens = True)
         att_mask_title = [int(token_id > 0) for token_id in input_id_title]
         input_ids_title = torch.tensor([input_id_title])
         att_masks_title = torch.tensor([att_mask_title])
         
-        input_id_description = self.tokenizer.encode(description_tok,add_special_tokens = True)
+        input_id_description = self.tokenizer.encode(description,add_special_tokens = True)
         att_mask_description = [int(token_id > 0) for token_id in input_id_description]
         input_ids_description = torch.tensor([input_id_description])
         att_masks_description = torch.tensor([att_mask_description])
@@ -81,9 +75,9 @@ class M_Sum():
         
         #vector sentences
         n = len(paras)
-        sents_vec_dict = {v: k for v, k in enumerate(paras_tok)}    
+        sents_vec_dict = {v: k for v, k in enumerate(paras)}    
         for index in range(n) : 
-            input_id = self.tokenizer.encode(paras_tok[index],add_special_tokens = True)
+            input_id = self.tokenizer.encode(paras[index],add_special_tokens = True)
             att_mask = [int(token_id > 0) for token_id in input_id]
             input_ids = torch.tensor([input_id])
             att_masks = torch.tensor([att_mask])
@@ -152,9 +146,9 @@ class M_Sum():
         return mingg
 
     
-# if __name__ == '__main__':    
-#     sum = M_Sum()  
+if __name__ == '__main__':    
+    sum = M_Sum()  
   
-#     print(sum.get_data_url('https://dantri.com.vn/the-gioi/quan-doi-my-phat-hien-linh-kien-dien-tu-dac-biet-trong-khi-cau-trung-quoc-20230214095227105.htm'))
-#     print('-------------------------------')
-#     print(sum.get_data_url('https://dantri.com.vn/kinh-doanh/bo-sung-326-trang-tai-lieu-flc-van-no-co-dong-mot-thong-tin-quan-trong-20220508143837505.htm'))   
+    print(sum.summary_url('https://dantri.com.vn/the-gioi/quan-doi-my-phat-hien-linh-kien-dien-tu-dac-biet-trong-khi-cau-trung-quoc-20230214095227105.htm'))
+    print('-------------------------------')
+    print(sum.summary_url('https://dantri.com.vn/kinh-doanh/bo-sung-326-trang-tai-lieu-flc-van-no-co-dong-mot-thong-tin-quan-trong-20220508143837505.htm'))   
